@@ -8,20 +8,20 @@ from estela_queue_adapter.utils import get_bootstrap_servers
 
 
 class KafkaConsumerAdapter(ConsumerInterface):
-    def __init__(self, listeners, port, topic, queue_max_timeout):
+    def __init__(self, listeners, port, topic, max_timeout):
         self.listeners = listeners
         self.port = port
         self.topic = topic
-        self.queue_max_timeout = queue_max_timeout
+        self.max_timeout = int(max_timeout)
         self.consumer = None
 
     def get_connection(self):
         if self.consumer is not None:
             return True
         try:
-            max_poll_interval_ms = self.queue_max_timeout * 1500
+            max_poll_interval_ms = self.max_timeout * 1500
             bootstrap_servers = get_bootstrap_servers(self.listeners, self.port)
-            _consumer = KafkaConsumer(
+            self.consumer = KafkaConsumer(
                 self.topic,
                 bootstrap_servers=bootstrap_servers,
                 auto_offset_reset="earliest",
@@ -39,3 +39,9 @@ class KafkaConsumerAdapter(ConsumerInterface):
             logging.error(str(ex))
             return False
         return True
+
+    def close(self):
+        self.consumer.close()
+
+    def __iter__(self):
+        return self.consumer

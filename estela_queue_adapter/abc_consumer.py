@@ -7,5 +7,9 @@ class ConsumerInterface(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def consume(self):
+    def close(self):
+        pass
+
+    @abstractmethod
+    def __iter__(self):
         pass
