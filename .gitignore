@@ -1,0 +1,26 @@
+# Environments
+.env
+.env.local
+.venv/
+venv/
+
+# Python
+__pycache__/
+.eggs/
+build
+dist
+*.pyc
+*.egg-info
+*.pyc
+
+# Various IDEs
+.project
+.idea/
+*.tmproj
+.vscode/
+
+# Misc
+.DS_Store
+
+# Certificates
+*.crt
