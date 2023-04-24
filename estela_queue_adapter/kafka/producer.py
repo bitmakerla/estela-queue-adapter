@@ -4,7 +4,7 @@ import logging
 from kafka import KafkaProducer
 
 from estela_queue_adapter.abc_producer import ProducerInterface
-from estela_queue_adapter.utils import get_bootstrap_servers
+from estela_queue_adapter.utils import get_bootstrap_servers, json_serializer
 
 
 class KafkaProducerAdapter(ProducerInterface):
@@ -23,7 +23,9 @@ class KafkaProducerAdapter(ProducerInterface):
             bootstrap_servers = get_bootstrap_servers(self.listeners, self.port)
             self.producer = KafkaProducer(
                 bootstrap_servers=bootstrap_servers,
-                value_serializer=lambda x: json.dumps(x).encode("utf-8"),
+                value_serializer=lambda x: json.dumps(
+                    x, default=json_serializer
+                ).encode("utf-8"),
                 api_version=(0, 10),
                 acks=1,
                 retries=1,
